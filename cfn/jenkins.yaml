@@ -123,6 +123,7 @@ Parameters:
     Type: String
     Default: t2.medium
     AllowedValues:
+      - t2.micro
       - t2.medium
       - t2.large
       - t2.xlarge
@@ -295,6 +296,8 @@ Resources:
           sed -i "s|VAL2|${AWSAccessKeySecret}|g" /home/ubuntu/.aws/credentials
           sed -i "s/VAL1/${AWS::Region}/g" /home/ubuntu/.aws/config
 
+          sed -i "s/VALA/${WSO2JENKINSVPC}/g" /home/jenkins/jenkins_env
+
           export publichostname=$(ec2metadata --public-hostname)
           sed -i "s/VAL/$publichostname/g" /var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml
           service jenkins start
@@ -310,8 +313,8 @@ Resources:
           sleep 120
           bash /var/lib/jenkins/update_password.sh ${JenkinsPassword} >> /home/jenkins/password.log
           service jenkins restart
-          sleep 150
-          java -jar /home/jenkins/resources/jenkins-cli.jar -s http://localhost:8080 -http -auth admin:${JenkinsPassword} build wso2am-2.6.0
+          # sleep 150
+          # java -jar /home/jenkins/resources/jenkins-cli.jar -s http://localhost:8080 -http -auth admin:${JenkinsPassword} build wso2am-2.6.0
           /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2JenkinsInstance --region ${AWS::Region}
   WSO2JenkinsSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
@@ -359,7 +362,7 @@ Mappings:
     us-west-1:
       wso2ei: ami-0f0b65de0d8519349
       wso2is: ami-05c18353016e25dda
-      wso2am: ami-071caa9c6506096b9
+      wso2am: ami-01044468e481918aa
     us-west-2:
       wso2ei: ami-0620bf520a1ea4784
       wso2is: ami-0e5ce149a2a7949c3
