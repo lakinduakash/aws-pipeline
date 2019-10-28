@@ -123,7 +123,8 @@ node(NODE_MASTER) {
                        cf              : "${DEV_CF}",
                        testEndpoint    : "${TEST_ENDPOINT_KEY}",
                        awsCredsFile    : "${AWS_CREDS_LOC}",
-                       environment     : "${DEV}"])
+                       environment     : "${DEV}"
+                       vpcId           : "${env.VPCID}"])
         }
 
         stage(Constants.Stages.RUNNING_TESTS) {
