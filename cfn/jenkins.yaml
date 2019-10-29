@@ -297,6 +297,7 @@ Resources:
           sed -i "s/VAL1/${AWS::Region}/g" /home/ubuntu/.aws/config
 
           sed -i "s/VALA/${WSO2JENKINSVPC}/g" /home/jenkins/jenkins_env
+          sed -i "s/VALB/${WSO2JenkinsPublicInternetGateway}/g" /home/jenkins/jenkins_env
 
           export publichostname=$(ec2metadata --public-hostname)
           sed -i "s/VAL/$publichostname/g" /var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml
@@ -362,7 +363,7 @@ Mappings:
     us-west-1:
       wso2ei: ami-0f0b65de0d8519349
       wso2is: ami-05c18353016e25dda
-      wso2am: ami-01044468e481918aa
+      wso2am: ami-00b006e5de4b63ef9
     us-west-2:
       wso2ei: ami-0620bf520a1ea4784
       wso2is: ami-0e5ce149a2a7949c3
