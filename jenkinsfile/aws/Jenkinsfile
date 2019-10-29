@@ -158,7 +158,7 @@ node(NODE_MASTER) {
         stage(Constants.Stages.DEPLOY_PRODUCTION) {
             log.info "Deploying to Production"
             PROD_CF = "${WORKSPACE}/${DEPLOYMENT_DIR}/${PRODUCT}/${env.DeploymentPattern}/cf.yaml"
-            env.TEST_ENDPOINT = deployAWS([wso2InstanceType: "${env.WSO2InstanceType}",
+            env.TEST_ENDPOINT = deployAWSProd([wso2InstanceType: "${env.WSO2InstanceType}",
                        product         : "${PRODUCT}",
                        version         : "${VERSION}",
                        keyPairName     : "${env.KeyPairName}",
