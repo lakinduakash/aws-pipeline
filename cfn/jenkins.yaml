@@ -299,6 +299,8 @@ Resources:
           sed -i "s/VALA/${WSO2JENKINSVPC}/g" /home/jenkins/jenkins_env
           sed -i "s/VALB/${WSO2JenkinsPublicInternetGateway}/g" /home/jenkins/jenkins_env
 
+          echo "env.JenkinsSubnet=${WSO2JenkinsSubnet1}" >> /home/jenkins/jenkins_env
+
           export publichostname=$(ec2metadata --public-hostname)
           sed -i "s/VAL/$publichostname/g" /var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml
           service jenkins start
