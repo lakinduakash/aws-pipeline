@@ -111,7 +111,7 @@ node(NODE_MASTER) {
             log.info "InternetGateway id : ${env.InternetGateway}"
             
             DEV_CF = "${WORKSPACE}/${DEPLOYMENT_DIR}/${PRODUCT}/${env.DeploymentPattern}/cf-dev.yaml"
-            env.TEST_ENDPOINT = deployAWS([wso2InstanceType: "${env.WSO2InstanceType}",
+            env.EFSID = deployAWS([wso2InstanceType: "${env.WSO2InstanceType}",
                        product         : "${PRODUCT}",
                        version         : "${VERSION}",
                        keyPairName     : "${env.KeyPairName}",
@@ -128,8 +128,11 @@ node(NODE_MASTER) {
                        awsCredsFile    : "${AWS_CREDS_LOC}",
                        environment     : "${DEV}",
                        vpcId           : "${env.VPCID}",
-                       internetGateway : "${env.InternetGateway}"])
+                       internetGateway : "${env.InternetGateway}",
+                       jenkinsSubnet   : "${env.JenkinsSubnet}"])
         }
+
+        log.info "EFS ID ${env.EFSID}"
 
         stage(Constants.Stages.RUNNING_TESTS) {
             log.info "Running Test"
