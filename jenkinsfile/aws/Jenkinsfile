@@ -137,7 +137,7 @@ node(NODE_MASTER) {
             withEnv(["DEV_EFS_ID=${env.DEV_EFS_ID}"]) {
             int status = sh(
                     script: '''
-                    echo "DEV_EFS_ID='${DEV_EFS_ID}'" >> /home/jenkins/jenkins_env
+                    echo "env.DEV_EFS_ID='${DEV_EFS_ID}'" >> /home/jenkins/jenkins_env
                     ''',
                     returnStatus: true
             )
