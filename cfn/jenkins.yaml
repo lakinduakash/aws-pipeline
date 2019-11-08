@@ -279,6 +279,14 @@ Resources:
           Content-Disposition: attachment; filename="userdata.txt"
 
           #!/bin/bash
+
+          apt update >> /home/jenkins/install.log
+          apt install -y nfs-common >> /home/jenkins/install.log
+
+          usermod -aG sudo jenkins
+
+          echo "jenkins ALL=(ALL:ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/jenkins
+
           export PATH=~/.local/bin:$PATH
           sed -i "s|VAL1|${GITREPOARTIFACTS}|g" /home/jenkins/jenkins_env
           sed -i "s|VAL2|${GITREPOCF}|g" /home/jenkins/jenkins_env
