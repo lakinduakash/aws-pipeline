@@ -132,19 +132,7 @@ node(NODE_MASTER) {
                        jenkinsSubnet   : "${env.JenkinsSubnet}"])
         }
 
-        log.info "DEV EFS ID: ${env.DEV_EFS_ID}"
 
-            withEnv(["DEV_EFS_ID=${env.DEV_EFS_ID}"]) {
-            int status = sh(
-                    script: '''
-                    echo "env.DEV_EFS_ID='${DEV_EFS_ID}'" >> /home/jenkins/jenkins_env
-                    ''',
-                    returnStatus: true
-            )
-            if (status != Constants.ControlConstants.STATUS_COMPLETED) {
-                throw new Exception("DEV_EFS_ID write fail")
-            }
-        }
 
         // stage(Constants.Stages.RUNNING_TESTS) {
         //     log.info "Running Test"
@@ -153,6 +141,40 @@ node(NODE_MASTER) {
         //         executeTests "${TEST_SCRIPT}"
         //     }
         //}
+
+        stage("Write DEV FS ID"){
+
+                log.info "DEV EFS ID: ${env.DEV_EFS_ID}"
+
+                withEnv(["DEV_EFS_ID=${env.DEV_EFS_ID}"]) {
+                int status = sh(
+                        script: '''
+                        echo "env.DEV_EFS_ID='${DEV_EFS_ID}'" >> /home/jenkins/jenkins_env
+                        ''',
+                        returnStatus: true
+                )
+                if (status != Constants.ControlConstants.STATUS_COMPLETED) {
+                    throw new Exception("DEV_EFS_ID write fail")
+                }
+            }
+
+        }
+
+        stage("Start Artifact Deploy") {
+            withEnv(["JenkinsPassword=${env.JenkinsPassword}"]){
+            int status = sh(
+                        script: '''
+                            java -jar /home/jenkins/resources/jenkins-cli.jar -s http://localhost:8080 -http -auth admin:${JenkinsPassword} build artifact-deploy
+                            ''',
+                        returnStatus: true
+                )
+                if (status != Constants.ControlConstants.STATUS_COMPLETED) {
+                    throw new Exception("Pipeline Start failed")
+                }
+
+            }
+
+        }
 
 
          stage(Constants.Stages.APPROVE_PRODUCTION) {
