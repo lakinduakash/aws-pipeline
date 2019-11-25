@@ -315,7 +315,7 @@ Resources:
 
           service jenkins start
 
-          export jenkinshookurl=http://$publichostname:8080/github-webhook/
+          export jenkinshookurl=http://$publichostname:8080/generic-webhook-trigger/invoke
           export githubhookurl=https://api.github.com/repos/${GitHubUsername}/${GitHubHookRepository}/hooks
           sleep 90
           export JENKINS_CRUMB=$(curl -s 'http://admin:admin@localhost:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
@@ -375,7 +375,7 @@ Mappings:
     us-west-1:
       wso2ei: ami-0f0b65de0d8519349
       wso2is: ami-05c18353016e25dda
-      wso2am: ami-0e2e294eb05927376
+      wso2am: ami-0e6190ee3e1644d9b
     us-west-2:
       wso2ei: ami-0620bf520a1ea4784
       wso2is: ami-0e5ce149a2a7949c3
