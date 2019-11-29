@@ -144,7 +144,7 @@ node(NODE_MASTER) {
 
         stage("Write DEV FS ID"){
 
-                log.info "DEV EFS ID: ${env.outputs}"
+                log.info "DEV EFS ID: ${env.outputs.getClass()}"
 
                 withEnv(["DEV_EFS_ID=${env.outputs.EFSID}"]) {
                 int status = sh(
