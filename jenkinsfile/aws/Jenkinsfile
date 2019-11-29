@@ -111,7 +111,7 @@ node(NODE_MASTER) {
             log.info "InternetGateway id : ${env.InternetGateway}"
             
             DEV_CF = "${WORKSPACE}/${DEPLOYMENT_DIR}/${PRODUCT}/${env.DeploymentPattern}/cf-dev.yaml"
-            env.outputs = deployAWS([wso2InstanceType: "${env.WSO2InstanceType}",
+            outputs = deployAWS([wso2InstanceType: "${env.WSO2InstanceType}",
                        product         : "${PRODUCT}",
                        version         : "${VERSION}",
                        keyPairName     : "${env.KeyPairName}",
@@ -144,9 +144,9 @@ node(NODE_MASTER) {
 
         stage("Write DEV FS ID"){
 
-                log.info "DEV EFS ID: ${env.outputs.getClass()}"
+                log.info "DEV EFS ID: ${outputs.EFSID}"
 
-                withEnv(["DEV_EFS_ID=${env.outputs.EFSID}"]) {
+                withEnv(["DEV_EFS_ID=${outputs.EFSID}"]) {
                 int status = sh(
                         script: '''
                         echo "env.DEV_EFS_ID='${DEV_EFS_ID}'" >> /home/jenkins/jenkins_env
