@@ -87,7 +87,9 @@ Metadata:
       DBType:
         default: Database Type
       GITREPOARTIFACTS:
-        default: Artifacts Repository (git)
+        default: Artifacts Repository WAR/CAR (git)
+      GITREPOARTIFACTSJAR:
+        default: Artifacts Repository JAR (git)
       GITREPOCF:
         default: CloudFormation Scripts (git)
       GITREPOPUPPET:
@@ -183,6 +185,10 @@ Parameters:
     AllowedPattern: '.+'
     ConstraintDescription: Mandatory field
   GITREPOARTIFACTS:
+    Type: String
+    AllowedPattern: '.+'
+    ConstraintDescription: Mandatory field
+  GITREPOARTIFACTSJAR:
     Type: String
     AllowedPattern: '.+'
     ConstraintDescription: Mandatory field
@@ -282,6 +288,7 @@ Resources:
 
           apt update >> /home/jenkins/install.log
           apt install -y nfs-common >> /home/jenkins/install.log
+          apt install -y git
 
           usermod -aG sudo jenkins
 
@@ -309,6 +316,8 @@ Resources:
 
           echo "env.JenkinsSubnet='${WSO2JenkinsSubnet1}'" >> /home/jenkins/jenkins_env
           echo "env.JenkinsPassword='${JenkinsPassword}'" >> /home/jenkins/jenkins_env
+
+          echo "env.GIT_REPO_ARTIFACTS_JAR='${GITREPOARTIFACTSJAR}'" >> /home/jenkins/jenkins_env
 
           export publichostname=$(ec2metadata --public-hostname)
           sed -i "s/VAL/$publichostname/g" /var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml
