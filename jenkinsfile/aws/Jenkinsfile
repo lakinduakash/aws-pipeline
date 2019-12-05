@@ -142,14 +142,15 @@ node(NODE_MASTER) {
         //     }
         //}
 
-        stage("Write DEV FS ID"){
-
+        stage("Write Stack Outputs"){
                 log.info "DEV EFS ID: ${outputs.EFSID}"
+                log.info "Transit Gateway ID: ${outputs.TransitGatewayId}"
 
-                withEnv(["DEV_EFS_ID=${outputs.EFSID}"]) {
+                withEnv(["DEV_EFS_ID=${outputs.EFSID}"," TransitGatewayId=${outputs.TransitGatewayId}"]) {
                 int status = sh(
                         script: '''
                         echo "env.DEV_EFS_ID='${DEV_EFS_ID}'" >> /home/jenkins/jenkins_env
+                        echo "env.TransitGatewayId='${TransitGatewayId}'" >> /home/jenkins/jenkins_env
                         ''',
                         returnStatus: true
                 )
@@ -193,9 +194,12 @@ node(NODE_MASTER) {
          }
 
         stage(Constants.Stages.DEPLOY_PRODUCTION) {
+
+            file = load ENV
+            
             log.info "Deploying to Production"
             PROD_CF = "${WORKSPACE}/${DEPLOYMENT_DIR}/${PRODUCT}/${env.DeploymentPattern}/cf.yaml"
-            env.TEST_ENDPOINT = deployAWS([wso2InstanceType: "${env.WSO2InstanceType}",
+            outputs = deployAWS([wso2InstanceType: "${env.WSO2InstanceType}",
                        product         : "${PRODUCT}",
                        version         : "${VERSION}",
                        keyPairName     : "${env.KeyPairName}",
@@ -210,15 +214,35 @@ node(NODE_MASTER) {
                        cf              : "${PROD_CF}",
                        testEndpoint    : "${TEST_ENDPOINT_KEY}",
                        awsCredsFile    : "${AWS_CREDS_LOC}",
-                       environment     : "${PROD}"])
+                       environment     : "${PROD}",
+                       transitGateway  : "${env.TransitGatewayId}"])
         }
 
-        stage(Constants.Stages.RUNNING_TESTS) {
-            log.info " Running Test "
-            def TEST_SCRIPT = "mvn  test -Dendpoint=${TEST_ENDPOINT} -D{$REMOVE_LOGS}"
-            dir("${ARTIFACTS_DIR}/tests/${PRODUCT}") {
-                executeTests "${TEST_SCRIPT}"
+        // stage(Constants.Stages.RUNNING_TESTS) {
+        //     log.info " Running Test "
+        //     def TEST_SCRIPT = "mvn  test -Dendpoint=${TEST_ENDPOINT} -D{$REMOVE_LOGS}"
+        //     dir("${ARTIFACTS_DIR}/tests/${PRODUCT}") {
+        //         executeTests "${TEST_SCRIPT}"
+        //     }
+        // }
+
+        stage("Write Stack Outputs"){
+
+                log.info "PROD EFS ID: ${outputs.EFSID}"
+                
+
+                withEnv(["PROD_EFS_ID=${outputs.EFSID}"]) {
+                int status = sh(
+                        script: '''
+                        echo "env.PROD_EFS_ID='${PROD_EFS_ID}'" >> /home/jenkins/jenkins_env
+                        ''',
+                        returnStatus: true
+                )
+                if (status != Constants.ControlConstants.STATUS_COMPLETED) {
+                    throw new Exception("PROD_EFS_ID write fail")
+                }
             }
+
         }
     } catch (exc) {
         log.err "Caught: ${exc}"
