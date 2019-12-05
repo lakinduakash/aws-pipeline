@@ -146,7 +146,7 @@ node(NODE_MASTER) {
                 log.info "DEV EFS ID: ${outputs.EFSID}"
                 log.info "Transit Gateway ID: ${outputs.TransitGatewayId}"
 
-                withEnv(["DEV_EFS_ID=${outputs.EFSID}"," TransitGatewayId=${outputs.TransitGatewayId}"]) {
+                withEnv(["DEV_EFS_ID=${outputs.EFSID}","TransitGatewayId=${outputs.TransitGatewayId}"]) {
                 int status = sh(
                         script: '''
                         echo "env.DEV_EFS_ID='${DEV_EFS_ID}'" >> /home/jenkins/jenkins_env
@@ -196,7 +196,7 @@ node(NODE_MASTER) {
         stage(Constants.Stages.DEPLOY_PRODUCTION) {
 
             file = load ENV
-            
+
             log.info "Deploying to Production"
             PROD_CF = "${WORKSPACE}/${DEPLOYMENT_DIR}/${PRODUCT}/${env.DeploymentPattern}/cf.yaml"
             outputs = deployAWS([wso2InstanceType: "${env.WSO2InstanceType}",
