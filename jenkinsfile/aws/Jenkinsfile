@@ -144,13 +144,11 @@ node(NODE_MASTER) {
 
         stage("Write Stack Outputs"){
                 log.info "DEV EFS ID: ${outputs.EFSID}"
-                log.info "Transit Gateway ID: ${outputs.TransitGatewayId}"
 
-                withEnv(["DEV_EFS_ID=${outputs.EFSID}","TransitGatewayId=${outputs.TransitGatewayId}"]) {
+                withEnv(["DEV_EFS_ID=${outputs.EFSID}"]) {
                 int status = sh(
                         script: '''
                         echo "env.DEV_EFS_ID='${DEV_EFS_ID}'" >> /home/jenkins/jenkins_env
-                        echo "env.TransitGatewayId='${TransitGatewayId}'" >> /home/jenkins/jenkins_env
                         ''',
                         returnStatus: true
                 )
