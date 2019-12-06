@@ -414,7 +414,7 @@ Mappings:
     us-west-1:
       wso2ei: ami-0f0b65de0d8519349
       wso2is: ami-05c18353016e25dda
-      wso2am: ami-0e6190ee3e1644d9b
+      wso2am: ami-0feccac1904843498
     us-west-2:
       wso2ei: ami-0620bf520a1ea4784
       wso2is: ami-0e5ce149a2a7949c3
