@@ -242,12 +242,13 @@ Resources:
       GatewayId: !Ref WSO2JenkinsPublicInternetGateway
       DestinationCidrBlock: 0.0.0.0/0
     DependsOn: WSO2JenkinsVPCInternetGatewayAttachment
-  WSO2TransitGatewayRoute:
-    Type: 'AWS::EC2::Route'
-    Properties:
-      RouteTableId: !Ref WSO2JenkinsPublicRouteTable
-      TransitGatewayId: !Ref WSO2TransitGateway
-      DestinationCidrBlock: 10.1.0.0/16
+  # WSO2TransitGatewayRoute:
+  #   Type: 'AWS::EC2::Route'
+  #   Properties:
+  #     RouteTableId: !Ref WSO2JenkinsPublicRouteTable
+  #     TransitGatewayId: !Ref WSO2TransitGateway
+  #     DestinationCidrBlock: 10.1.0.0/16
+  #   DependsOn: WSO2TransitGateway
 
   WSO2JenkinsVPCInternetGatewayAttachment:
     Type: 'AWS::EC2::VPCGatewayAttachment'
