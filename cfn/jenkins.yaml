@@ -423,7 +423,7 @@ Resources:
       VpcId: !Ref WSO2JENKINSVPC
 Outputs:
   JenkinsConsoleURL:
-    Value: !Sub 'http://${WSO2JenkinsInstance.PublicDnsName}:8080/blue/pipelines'
+    Value: !Sub 'http://${WSO2JenkinsInstance.PublicDnsName}:8080'
     Description: Jenkins Console URL
 Mappings:
   WSO2UbuntuAMIRegionMap:
