@@ -368,7 +368,7 @@ Resources:
 
           service jenkins start
 
-          export jenkinshookurl=http://admin:${JenkinsPassword}$publichostname:8080/generic-webhook-trigger/invoke
+          export jenkinshookurl=http://admin:${JenkinsPassword}@$publichostname:8080/generic-webhook-trigger/invoke
           export githubhookurl=https://api.github.com/repos/${GitHubUsername}/${GitHubHookRepository}/hooks
           sleep 90
           export JENKINS_CRUMB=$(curl -s 'http://admin:admin@localhost:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)')
