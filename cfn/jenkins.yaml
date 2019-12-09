@@ -52,11 +52,17 @@ Metadata:
           - ProductName
           - DeploymentPattern
       - Label:
+          default: Stack Configuration
+        Parameters:
+          - DevStackName
+          - ProdStackName
+      - Label:
           default: Other Parameters
         Parameters:
           - GITREPOARTIFACTS
           - GITREPOCF
           - GITREPOPUPPET
+          - GITREPOARTIFACTSJAR
           - JenkinsPassword
           - Email
     ParameterLabels:
@@ -102,6 +108,10 @@ Metadata:
         default: Jenkins console login Password
       Email:
         default: Email
+      DevStackName:
+        default: Name of the Dev Stack
+      ProdStackName:
+        default: Name of the Prod Stack  
 Parameters:
   AWSAccessKeyId:
     Type: String
@@ -109,6 +119,7 @@ Parameters:
     ConstraintDescription: Mandatory field
   AWSAccessKeySecret:
     Type: String
+    NoEcho: true
     AllowedPattern: '.+'
     ConstraintDescription: Mandatory field
   KeyPairName:
@@ -140,16 +151,16 @@ Parameters:
     Type: String
     AllowedPattern: '.+'
     AllowedValues:
-      - wso2ei
-      - wso2is
+      # - wso2ei
+      # - wso2is
       - wso2am
     ConstraintDescription: Mandatory field
   DeploymentPattern:
     Type: String
     AllowedPattern: '.+'
     AllowedValues:
-      - ei_integrator
-      - is
+      # - ei_integrator
+      # - is
       - apim
     ConstraintDescription: Mandatory field
   GitHubUsername:
@@ -208,6 +219,16 @@ Parameters:
   Email:
     Type: String
     Description: A valid email address to receive notifications on pipeline (optional)
+  ProdStackName:
+    Type: String
+    AllowedPattern: '.+'
+    ConstraintDescription: Mandatory field
+    Description: A valid CF Stack Name
+  DevStackName:
+    Type: String
+    AllowedPattern: '.+'
+    ConstraintDescription: Mandatory field
+    Description: A valid CF Stack Name
 Resources:
   # networking configurations
   WSO2JenkinsPublicInternetGateway:
@@ -338,6 +359,9 @@ Resources:
 
           echo "env.GIT_REPO_ARTIFACTS_JAR='${GITREPOARTIFACTSJAR}'" >> /home/jenkins/jenkins_env
           echo "env.TransitGatewayId='${WSO2TransitGateway}'" >> /home/jenkins/jenkins_env
+
+          echo "env.DevStackName='${DevStackName}'" >> /home/jenkins/jenkins_env
+          echo "env.ProdStackName='${ProdStackName}'" >> /home/jenkins/jenkins_env
 
           export publichostname=$(ec2metadata --public-hostname)
           sed -i "s/VAL/$publichostname/g" /var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml
